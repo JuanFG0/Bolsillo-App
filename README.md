@@ -28,15 +28,6 @@ App de finanzas personales para tu iPhone. Funciona sin internet y todo lo que a
 - Si cambias de teléfono o algo sale mal: instala la app de nuevo y usa **Ajustes → Importar respaldo**.
 - El PIN evita que otra persona abra la app, pero **no cifra** los datos. Si lo olvidas, la única salida es borrar los datos (y luego importar tu respaldo).
 
-## Actualizar la app más adelante
-
-Cuando cambies o agregues algo (por ejemplo, con ayuda de Claude):
-
-1. En `sw.js` sube el número de `VERSION` (por ejemplo, de `bolsillo-v1.0.0` a `bolsillo-v1.0.1`). Sin este paso, el iPhone seguiría usando la versión vieja guardada.
-2. Vuelve a publicar la carpeta (arrástrala de nuevo en Netlify o sube los archivos cambiados a GitHub).
-3. En el iPhone, abre la app con internet; la nueva versión se descarga y se usa la **siguiente vez** que abras la app (ciérrala del todo y ábrela otra vez).
-
-Tus datos no se tocan al actualizar.
 
 ## Estructura de archivos
 
