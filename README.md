@@ -13,24 +13,7 @@ App de finanzas personales para tu iPhone. Funciona sin internet y todo lo que a
 - **Bloqueo con PIN**, modo claro/oscuro, y un aviso para recordarte hacer respaldos.
 - **Estilo Liquid Glass:** barra inferior, botones, hojas y avisos de vidrio translúcido (versión web, sin la refracción real de iOS).
 
-## Paso 1 · Publicarla (gratis)
-
-La app es una carpeta de archivos. Para usarla en el iPhone tiene que estar en internet **una vez** (después funciona sin conexión). Elige una de estas dos opciones:
-
-### Opción A · Netlify (la más fácil, solo arrastrar)
-1. Entra a <https://app.netlify.com/drop> y crea una cuenta gratis.
-2. Arrastra **la carpeta `bolsillo`** (la que contiene `index.html`) a la página.
-3. Netlify te da un link como `https://algo-raro.netlify.app`. Ese es el link de tu app. Puedes cambiarle el nombre en *Site settings → Change site name* por uno que solo tú conozcas.
-
-### Opción B · GitHub Pages
-1. Crea una cuenta en <https://github.com> y un repositorio nuevo (público; ponle un nombre poco obvio).
-2. Entra al repositorio → *Add file → Upload files* y sube **el contenido** de la carpeta `bolsillo` (que `index.html` quede en la raíz).
-3. Ve a *Settings → Pages*, en *Branch* elige `main` y la carpeta `/ (root)`, y guarda.
-4. Después de uno o dos minutos tu app queda en `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`.
-
-> Que el repositorio sea público solo significa que el *código* se puede ver. Tus datos nunca salen de tu teléfono.
-
-## Paso 2 · Instalarla en el iPhone
+## Instalarla en el iPhone
 
 1. Abre el link **en Safari** (con internet).
 2. Toca el botón **Compartir** (cuadrado con flecha hacia arriba) → **Añadir a pantalla de inicio** → **Añadir**.
@@ -45,16 +28,6 @@ La app es una carpeta de archivos. Para usarla en el iPhone tiene que estar en i
 - Haz un respaldo cada tanto: **Ajustes → Exportar respaldo → Guardar en Archivos** (mejor en iCloud Drive). La app te lo recuerda.
 - Si cambias de teléfono o algo sale mal: instala la app de nuevo y usa **Ajustes → Importar respaldo**.
 - El PIN evita que otra persona abra la app, pero **no cifra** los datos. Si lo olvidas, la única salida es borrar los datos (y luego importar tu respaldo).
-
-## Actualizar la app más adelante
-
-Cuando cambies o agregues algo (por ejemplo, con ayuda de Claude):
-
-1. En `sw.js` sube el número de `VERSION` (por ejemplo, de `bolsillo-v1.1.1` a `bolsillo-v1.1.2`). Sin este paso, el iPhone seguiría usando la versión vieja guardada.
-2. Vuelve a publicar la carpeta (arrástrala de nuevo en Netlify o sube los archivos cambiados a GitHub).
-3. En el iPhone, abre la app con internet; la nueva versión se descarga y se usa la **siguiente vez** que abras la app (ciérrala del todo y ábrela otra vez).
-
-Tus datos no se tocan al actualizar.
 
 ## Estructura de archivos
 
