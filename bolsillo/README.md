@@ -11,6 +11,7 @@ App de finanzas personales para tu iPhone. Funciona sin internet y todo lo que a
 - **Deudas:** cuánto debes, cuánto llevas pagado, cuota, día de pago y aviso de vencimiento. Los pagos también cuentan como gasto.
 - **Respaldo:** exportar e importar tus datos en un archivo.
 - **Bloqueo con PIN**, modo claro/oscuro, y un aviso para recordarte hacer respaldos.
+- **Estilo Liquid Glass:** barra inferior, botones, hojas y avisos de vidrio translúcido (versión web, sin la refracción real de iOS).
 
 ## Paso 1 · Publicarla (gratis)
 
@@ -49,7 +50,7 @@ La app es una carpeta de archivos. Para usarla en el iPhone tiene que estar en i
 
 Cuando cambies o agregues algo (por ejemplo, con ayuda de Claude):
 
-1. En `sw.js` sube el número de `VERSION` (por ejemplo, de `bolsillo-v1.0.0` a `bolsillo-v1.0.1`). Sin este paso, el iPhone seguiría usando la versión vieja guardada.
+1. En `sw.js` sube el número de `VERSION` (por ejemplo, de `bolsillo-v1.1.0` a `bolsillo-v1.1.1`). Sin este paso, el iPhone seguiría usando la versión vieja guardada.
 2. Vuelve a publicar la carpeta (arrástrala de nuevo en Netlify o sube los archivos cambiados a GitHub).
 3. En el iPhone, abre la app con internet; la nueva versión se descarga y se usa la **siguiente vez** que abras la app (ciérrala del todo y ábrela otra vez).
 
