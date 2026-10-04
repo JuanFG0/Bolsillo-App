@@ -49,14 +49,32 @@ function buildDock() {
   const fab = h('button', { type: 'button', class: 'fab', 'aria-label': 'Agregar movimiento', onClick: () => openMovementSheet(null, {}) }, icon('plus'));
   document.getElementById('dock').replaceChildren(tabs, fab);
   initTabDrag(tabs);
+  // Si cambia el tamaño de la barra (ventana, zoom, tipografía), la pastilla se vuelve a colocar sola
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => movePill());
+    ro.observe(tabs);
+    tabs.querySelectorAll('.tab').forEach((t) => ro.observe(t));
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(movePill);
+  setInterval(movePill, 500); // red de seguridad
 }
 
+// Coloca la pastilla exactamente sobre la pestaña activa. Mide en pantalla (no en números enteros)
+// y se vuelve a ejecutar sola cuando algo cambia el tamaño de la barra.
 function movePill() {
+  const bar = document.querySelector('.tabs');
   const pill = document.querySelector('.tab-pill');
   const active = document.querySelector('.tab[aria-current="page"]');
-  if (!pill || !active) return;
-  pill.style.width = active.offsetWidth + 'px';
-  pill.style.transform = `translateX(${active.offsetLeft}px)`;
+  if (!bar || !pill || !active || bar.classList.contains('dragging')) return;
+  const br = bar.getBoundingClientRect();
+  if (!br.width) return;
+  const k = br.width / (bar.offsetWidth || br.width) || 1; // por si la página está escalada
+  const ar = active.getBoundingClientRect();
+  const x = ((ar.left - br.left) / k - bar.clientLeft).toFixed(2) + 'px';
+  const w = (ar.width / k).toFixed(2) + 'px';
+  const tr = `translateX(${x})`;
+  if (pill.style.transform !== tr) pill.style.transform = tr;
+  if (pill.style.width !== w) pill.style.width = w;
   // la primera vez se coloca sin animación
   if (pill.classList.contains('no-anim')) requestAnimationFrame(() => requestAnimationFrame(() => pill.classList.remove('no-anim')));
 }
@@ -109,13 +127,15 @@ function initTabDrag(bar) {
       if (Math.abs(e.clientX - drag.x0) < 8) return;
       drag.active = true;
       bar.classList.add('dragging');
-      try { bar.setPointerCapture(e.pointerId); } catch (_) {}
+      // con el ratón hay que capturar el puntero; con el dedo el navegador ya lo hace solo
+      if (e.pointerType === 'mouse') { try { bar.setPointerCapture(e.pointerId); } catch (_) {} }
     }
     follow(e.clientX);
   });
   bar.addEventListener('pointerup', () => end(true));
   bar.addEventListener('pointercancel', () => end(false));
-  bar.addEventListener('lostpointercapture', () => drag && drag.active && end(true));
+  // mientras se arrastra, que la pantalla no se mueva por debajo del dedo
+  bar.addEventListener('touchmove', (e) => { if (drag && drag.active && e.cancelable) e.preventDefault(); }, { passive: false });
   // si hubo arrastre, el "clic" que sigue al soltar no debe abrir otra pestaña
   bar.addEventListener('click', (e) => { if (justDragged) { e.stopPropagation(); e.preventDefault(); } }, true);
 }

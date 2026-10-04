@@ -464,159 +464,44 @@ body.cover #app, body.cover #layers { visibility: hidden; }
 }
 
 /* =====================================================================
-   Liquid Glass (aproximación web)
-   Vidrio translúcido con desenfoque, reflejo en el borde y una pastilla
-   que se desliza entre pestañas. No hay refracción real de lente: Safari
-   no la permite en páginas web.
+   Liquid Glass sutil
+   Solo la barra inferior, su pastilla y la barra superior al hacer scroll
+   usan vidrio. Todo lo demás se queda sólido, como antes.
    ===================================================================== */
 :root {
-  --lg-bg: rgba(255, 255, 255, 0.46);
-  --lg-bg-strong: rgba(255, 255, 255, 0.62);
-  --lg-blur: blur(22px) saturate(1.9) brightness(1.04);
-  --lg-edge: rgba(255, 255, 255, 0.75);
-  --lg-edge-low: rgba(255, 255, 255, 0.18);
-  --lg-rim: rgba(0, 0, 0, 0.06);
-  --lg-drop: 0 14px 34px rgba(20, 28, 54, 0.16), 0 2px 8px rgba(20, 28, 54, 0.08);
-  --lg-sheen: linear-gradient(155deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.22) 100%);
-  --lg-sheet: rgba(246, 246, 250, 0.74);
-  --lg-ambient-a: rgba(94, 140, 255, 0.16);
-  --lg-ambient-b: rgba(255, 150, 120, 0.14);
+  --lg-bg: rgba(255, 255, 255, 0.66);
+  --lg-bg-strong: rgba(255, 255, 255, 0.95);
+  --lg-blur: blur(18px) saturate(1.5);
+  --lg-edge: rgba(255, 255, 255, 0.9);
+  --lg-rim: rgba(0, 0, 0, 0.07);
+  --lg-drop: 0 8px 24px rgba(20, 24, 40, 0.12), 0 1px 4px rgba(20, 24, 40, 0.06);
 }
 :root[data-theme='dark'] {
-  --lg-bg: rgba(60, 60, 66, 0.4);
-  --lg-bg-strong: rgba(120, 120, 130, 0.38);
-  --lg-blur: blur(24px) saturate(1.8) brightness(0.95);
-  --lg-edge: rgba(255, 255, 255, 0.3);
-  --lg-edge-low: rgba(255, 255, 255, 0.06);
-  --lg-rim: rgba(0, 0, 0, 0.5);
-  --lg-drop: 0 16px 36px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.4);
-  --lg-sheen: linear-gradient(155deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.08) 100%);
-  --lg-sheet: rgba(34, 34, 38, 0.72);
-  --lg-ambient-a: rgba(80, 120, 255, 0.2);
-  --lg-ambient-b: rgba(255, 120, 100, 0.12);
+  --lg-bg: rgba(44, 44, 48, 0.62);
+  --lg-bg-strong: rgba(110, 110, 118, 0.55);
+  --lg-blur: blur(20px) saturate(1.5);
+  --lg-edge: rgba(255, 255, 255, 0.22);
+  --lg-rim: rgba(255, 255, 255, 0.08);
+  --lg-drop: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-/* Fondo suave con un poco de color para que el vidrio tenga algo que reflejar */
-#app::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(60% 34% at 12% 4%, var(--lg-ambient-a), transparent 70%),
-    radial-gradient(55% 32% at 96% 46%, var(--lg-ambient-b), transparent 70%);
-}
-#view { z-index: 1; }
-.dock { z-index: 20; }
-
-/* Superficie de vidrio común */
-.tabs, .fab, .nav .icon-btn, .toast, .tab-pill {
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-}
-.tabs, .fab, .nav .icon-btn, .toast {
-  position: relative;
-  background: var(--lg-bg);
-  box-shadow:
-    inset 0 0 0 0.5px var(--lg-rim),
-    inset 1px 1.5px 0 -0.5px var(--lg-edge),
-    inset -1px -1.5px 0 -0.5px var(--lg-edge-low),
-    var(--lg-drop);
-}
-.tabs::after, .fab::after, .nav .icon-btn::after, .toast::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--lg-sheen);
-  pointer-events: none;
-}
-
-/* Barra de pestañas */
-.tabs { overflow: visible; }
-.tab { position: relative; z-index: 1; background: transparent; transition: color 0.25s, transform 0.3s var(--ease); }
-.tabs .tab[aria-current='page'] { background: transparent; color: var(--ink); }
-.tab:active { transform: scale(0.94); }
-.tab-pill {
-  position: absolute;
-  z-index: 0;
-  top: 5px;
-  bottom: 5px;
-  left: 0;
-  width: 0;
-  border-radius: 27px;
-  background: var(--lg-bg-strong);
-  box-shadow:
-    inset 0 0 0 0.5px var(--lg-rim),
-    inset 1px 1.5px 0 -0.5px var(--lg-edge),
-    inset -1px -1.5px 0 -0.5px var(--lg-edge-low),
-    0 4px 12px rgba(20, 28, 54, 0.1);
-  transition: transform 0.55s cubic-bezier(0.3, 1.35, 0.5, 1), width 0.55s cubic-bezier(0.3, 1.35, 0.5, 1);
-  pointer-events: none;
-}
-.tab-pill::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--lg-sheen); }
-.tab-pill.no-anim { transition: none; }
-.tab[aria-current='page'] svg { color: var(--ink); }
-
-/* Botón + de vidrio con un toque de tinta */
-.fab {
-  background: color-mix(in srgb, var(--ink) 74%, transparent);
-  color: var(--bg);
-  transition: transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
-}
-.fab::after { background: linear-gradient(155deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0.08) 100%); }
-.fab svg { position: relative; z-index: 1; }
-.fab:active { transform: scale(0.9); }
-
-/* Barra superior y botones redondos */
-#view.scrolled .nav {
-  background: var(--lg-bg);
-  -webkit-backdrop-filter: var(--lg-blur);
-  backdrop-filter: var(--lg-blur);
-  box-shadow: 0 0.5px 0 var(--line), 0 8px 24px -12px rgba(20, 28, 54, 0.18);
-}
-.nav .icon-btn { transition: transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1); }
-.nav .icon-btn svg { position: relative; z-index: 1; }
-.nav .icon-btn:active { transform: scale(0.9); }
-
-/* Aviso flotante */
-.toast { color: var(--ink); }
-.toast > * { position: relative; z-index: 1; }
-
-/* Hojas y alertas */
-.backdrop { background: rgba(10, 12, 24, 0.28); }
-.sheet {
-  background: var(--lg-sheet);
-  -webkit-backdrop-filter: blur(34px) saturate(1.8);
-  backdrop-filter: blur(34px) saturate(1.8);
-  box-shadow: inset 0 1px 0 var(--lg-edge), inset 0 0 0 0.5px var(--lg-rim), 0 -10px 50px rgba(10, 14, 30, 0.2);
-}
-.sheet .group { background: color-mix(in srgb, var(--sheet-surface) 78%, transparent); }
-.alert {
-  background: var(--lg-sheet);
-  -webkit-backdrop-filter: blur(34px) saturate(1.8);
-  backdrop-filter: blur(34px) saturate(1.8);
-  box-shadow: inset 0 1px 0 var(--lg-edge), inset 0 0 0 0.5px var(--lg-rim), 0 24px 70px rgba(10, 14, 30, 0.3);
-}
-
-/* Sin soporte de desenfoque, o con "Reducir transparencia": superficies sólidas */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  :root { --lg-bg: var(--glass); --lg-bg-strong: var(--fill-2); --lg-sheet: var(--sheet-bg); }
-  .fab { background: var(--ink); }
-}
-@media (prefers-reduced-transparency: reduce) {
-  :root { --lg-bg: var(--surface); --lg-bg-strong: var(--fill-2); --lg-sheet: var(--sheet-bg); --lg-blur: none; }
-  .tabs, .fab, .nav .icon-btn, .toast, .tab-pill, .sheet, .alert, #view.scrolled .nav { -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .fab { background: var(--ink); }
-  .sheet .group { background: var(--sheet-surface); }
-}
-
-/* ---------- Barra inferior: más espacio y gesto de arrastre ---------- */
+/* Barra de pestañas de vidrio */
 .dock { left: 12px; right: 12px; gap: 8px; }
-.tabs { height: 62px; border-radius: 31px; touch-action: none; }
-.fab { width: 62px; height: 62px; }
+.tabs {
+  position: relative;
+  height: 62px;
+  border-radius: 31px;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  background: var(--lg-bg);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+  box-shadow: inset 0 0 0 0.5px var(--lg-rim), inset 0 1px 0 var(--lg-edge), var(--lg-drop);
+}
 .tab {
+  position: relative;
+  z-index: 1;
   flex: 1 1 auto;
   min-width: 0;
   padding: 0 6px;
@@ -624,13 +509,66 @@ body.cover #app, body.cover #layers { visibility: hidden; }
   font-size: 10px;
   letter-spacing: -0.01em;
   white-space: nowrap;
+  background: transparent;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  transition: color 0.2s;
 }
-.tab-pill { border-radius: 26px; transition: transform 0.55s cubic-bezier(0.3, 1.35, 0.5, 1), width 0.35s var(--ease), scale 0.3s cubic-bezier(0.3, 1.5, 0.5, 1); }
-.tab-pill.no-anim { transition: none; }
-/* Al mantener el dedo, la pastilla se "levanta" como vidrio líquido */
-.tabs.pressing .tab-pill { scale: 1.1 1.14; }
-.tabs.dragging .tab-pill { transition: width 0.25s var(--ease), scale 0.3s cubic-bezier(0.3, 1.5, 0.5, 1); }
-.tab.hot { color: var(--ink); }
-.tab.hot svg { transform: scale(1.06); }
-.tab svg { transition: transform 0.25s var(--ease); }
+.tabs .tab[aria-current='page'] { background: transparent; color: var(--ink); }
 .tab:active { transform: none; }
+.tab.hot { color: var(--ink); }
+
+/* Pastilla que se desliza */
+.tab-pill {
+  position: absolute;
+  z-index: 0;
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  width: 0;
+  border-radius: 26px;
+  background: var(--lg-bg-strong);
+  box-shadow: inset 0 0 0 0.5px var(--lg-rim), 0 1px 4px rgba(20, 24, 40, 0.1);
+  transition: transform 0.45s cubic-bezier(0.32, 1.2, 0.5, 1), width 0.3s var(--ease), scale 0.25s var(--ease);
+  pointer-events: none;
+}
+.tab-pill.no-anim { transition: none; }
+.tabs.pressing .tab-pill { scale: 1.04 1.08; }
+.tabs.dragging .tab-pill { transition: width 0.22s var(--ease), scale 0.25s var(--ease); }
+
+/* Botón + sólido, como antes */
+.fab { width: 62px; height: 62px; box-shadow: var(--shadow-float); }
+
+/* Barra superior: vidrio suave solo al hacer scroll */
+#view.scrolled .nav {
+  background: var(--lg-bg);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+  box-shadow: 0 0.5px 0 var(--line);
+}
+
+/* Sin desenfoque o con "Reducir transparencia": superficies sólidas */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --lg-bg: var(--glass); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root { --lg-bg: var(--surface); }
+  .tabs, #view.scrolled .nav { -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+/* La pastilla nunca se sale de la barra: se recorta y se desliza sin rebote */
+.tabs { min-width: 0; overflow: hidden; }
+.tab-pill { transition: transform 0.4s var(--ease), width 0.3s var(--ease), scale 0.25s var(--ease); }
+.tab-pill.no-anim { transition: none; }
+.tabs.dragging .tab-pill { transition: width 0.22s var(--ease), scale 0.25s var(--ease); }
+/* Ventanas angostas (por ejemplo, el navegador del PC): se achican los textos y, si hace falta, solo íconos */
+@media (max-width: 400px) { .tab { padding: 0 3px; } }
+@media (max-width: 340px) { .tab { font-size: 9px; } .tab svg { width: 22px; height: 22px; } }
+@media (max-width: 310px) {
+  .tab span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .tab { gap: 0; }
+}
+
+/* Sin aro blanco alrededor de la pestaña: la pastilla ya marca cuál está activa */
+.tab:focus-visible { outline: 2px solid var(--fill-2); outline-offset: -4px; border-radius: 26px; }
+.tab:focus:not(:focus-visible) { outline: none; }
