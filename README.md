@@ -12,24 +12,7 @@ App de finanzas personales para tu iPhone. Funciona sin internet y todo lo que a
 - **Respaldo:** exportar e importar tus datos en un archivo.
 - **Bloqueo con PIN**, modo claro/oscuro, y un aviso para recordarte hacer respaldos.
 
-## Paso 1 · Publicarla (gratis)
-
-La app es una carpeta de archivos. Para usarla en el iPhone tiene que estar en internet **una vez** (después funciona sin conexión). Elige una de estas dos opciones:
-
-### Opción A · Netlify (la más fácil, solo arrastrar)
-1. Entra a <https://app.netlify.com/drop> y crea una cuenta gratis.
-2. Arrastra **la carpeta `bolsillo`** (la que contiene `index.html`) a la página.
-3. Netlify te da un link como `https://algo-raro.netlify.app`. Ese es el link de tu app. Puedes cambiarle el nombre en *Site settings → Change site name* por uno que solo tú conozcas.
-
-### Opción B · GitHub Pages
-1. Crea una cuenta en <https://github.com> y un repositorio nuevo (público; ponle un nombre poco obvio).
-2. Entra al repositorio → *Add file → Upload files* y sube **el contenido** de la carpeta `bolsillo` (que `index.html` quede en la raíz).
-3. Ve a *Settings → Pages*, en *Branch* elige `main` y la carpeta `/ (root)`, y guarda.
-4. Después de uno o dos minutos tu app queda en `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`.
-
-> Que el repositorio sea público solo significa que el *código* se puede ver. Tus datos nunca salen de tu teléfono.
-
-## Paso 2 · Instalarla en el iPhone
+## Instalarla en el iPhone
 
 1. Abre el link **en Safari** (con internet).
 2. Toca el botón **Compartir** (cuadrado con flecha hacia arriba) → **Añadir a pantalla de inicio** → **Añadir**.
