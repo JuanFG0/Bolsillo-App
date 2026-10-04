@@ -27,6 +27,8 @@ function buildDock() {
   const tabs = h(
     'nav',
     { class: 'tabs', 'aria-label': 'Secciones' },
+    // Pastilla de vidrio que se desliza hasta la pestaña activa
+    h('span', { class: 'tab-pill no-anim', 'aria-hidden': 'true' }),
     TABS.map((t) =>
       h(
         'button',
@@ -46,11 +48,83 @@ function buildDock() {
   );
   const fab = h('button', { type: 'button', class: 'fab', 'aria-label': 'Agregar movimiento', onClick: () => openMovementSheet(null, {}) }, icon('plus'));
   document.getElementById('dock').replaceChildren(tabs, fab);
+  initTabDrag(tabs);
+}
+
+function movePill() {
+  const pill = document.querySelector('.tab-pill');
+  const active = document.querySelector('.tab[aria-current="page"]');
+  if (!pill || !active) return;
+  pill.style.width = active.offsetWidth + 'px';
+  pill.style.transform = `translateX(${active.offsetLeft}px)`;
+  // la primera vez se coloca sin animación
+  if (pill.classList.contains('no-anim')) requestAnimationFrame(() => requestAnimationFrame(() => pill.classList.remove('no-anim')));
+}
+
+// Arrastrar el dedo por la barra (como Apple Music): la pastilla sigue el dedo y al soltar abre la pestaña que quedó debajo.
+function initTabDrag(bar) {
+  const pill = bar.querySelector('.tab-pill');
+  let drag = null;
+  let justDragged = false;
+
+  const tabAt = (x) => {
+    const tabs = [...bar.querySelectorAll('.tab')];
+    const r = bar.getBoundingClientRect();
+    // ancho disponible sin el relleno de la barra; se elige la pestaña más cercana al dedo
+    const px = Math.min(Math.max(x, r.left + 6), r.right - 6);
+    return tabs.find((t) => { const b = t.getBoundingClientRect(); return px >= b.left && px <= b.right; }) || tabs[tabs.length - 1];
+  };
+  const follow = (x) => {
+    const r = bar.getBoundingClientRect();
+    const hot = tabAt(x);
+    drag.hot = hot;
+    bar.querySelectorAll('.tab').forEach((t) => t.classList.toggle('hot', t === hot));
+    const w = hot.offsetWidth;
+    const left = Math.min(Math.max(x - r.left - w / 2, 5), bar.clientWidth - 5 - w);
+    pill.style.width = w + 'px';
+    pill.style.transform = `translateX(${left}px)`;
+  };
+  const end = (commit) => {
+    if (!drag) return;
+    const hot = drag.hot;
+    const wasDragging = drag.active;
+    drag = null;
+    bar.classList.remove('pressing', 'dragging');
+    bar.querySelectorAll('.tab').forEach((t) => t.classList.remove('hot'));
+    if (!wasDragging) return;
+    justDragged = true;
+    setTimeout(() => (justDragged = false), 60);
+    if (commit && hot && hot.dataset.tab !== V.tab) hooks.go(hot.dataset.tab);
+    else movePill();
+  };
+
+  bar.addEventListener('pointerdown', (e) => {
+    if (e.button !== undefined && e.button > 0) return;
+    drag = { id: e.pointerId, x0: e.clientX, active: false, hot: null };
+    bar.classList.add('pressing');
+  });
+  bar.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (!drag.active) {
+      if (Math.abs(e.clientX - drag.x0) < 8) return;
+      drag.active = true;
+      bar.classList.add('dragging');
+      try { bar.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+    follow(e.clientX);
+  });
+  bar.addEventListener('pointerup', () => end(true));
+  bar.addEventListener('pointercancel', () => end(false));
+  bar.addEventListener('lostpointercapture', () => drag && drag.active && end(true));
+  // si hubo arrastre, el "clic" que sigue al soltar no debe abrir otra pestaña
+  bar.addEventListener('click', (e) => { if (justDragged) { e.stopPropagation(); e.preventDefault(); } }, true);
 }
 
 function updateDock() {
   document.querySelectorAll('.tab').forEach((b) => (b.dataset.tab === V.tab ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current')));
+  movePill();
 }
+window.addEventListener('resize', movePill);
 
 function renderView() {
   const tab = V.tab;

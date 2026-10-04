@@ -2,7 +2,7 @@
 // IMPORTANTE: cuando cambies cualquier archivo de la app, sube el número de VERSION
 // para que los teléfonos descarguen la versión nueva (se aplica la siguiente vez que abras la app).
 
-const VERSION = 'bolsillo-v1.0.0';
+const VERSION = 'bolsillo-v1.1.1';
 
 const ASSETS = [
   './',

@@ -10,7 +10,7 @@ import { applyTheme } from './theme.js';
 import { render } from './nav.js';
 import { storageVolatile } from './store.js';
 
-export const APP_VERSION = '1.0';
+export const APP_VERSION = '1.1.1';
 
 // Filas de Ajustes: el texto secundario puede ocupar varias líneas
 const R = (o) => row({ wrap: true, ...o });
